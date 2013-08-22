@@ -2,6 +2,7 @@
 	
 //use an autoloader
 require('libs/Bootstrap.php');
+require('helpers/controller_helper.php');
 require('libs/Controller.php');
 require('libs/Model.php');
 require('libs/View.php');

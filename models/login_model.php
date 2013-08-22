@@ -30,10 +30,6 @@ class Login_Model extends Model
 
 		if($count > 0){
 			Session::set("is_logged_in", true);
-			header("Location: ../dashboard");
-		}
-		else{
-			header("Location: ../login");
 		}
 	}
 }

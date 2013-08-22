@@ -15,6 +15,7 @@ class Login extends Controller
 
 	function run(){
 		$this->model->run();
+		$this->helper->redirect("index");
 	}
 }
 

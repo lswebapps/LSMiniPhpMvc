@@ -10,6 +10,9 @@ class Controller
 		//available in child classes
 		$this->view = new View();
 
+		//Helper for every controller
+		$this->helper = new Controller_Helper();
+
 		//by convention models for controllers should
 		//be the controllername followeed by '_Model'
 		$class_name = get_called_class()."_Model";
