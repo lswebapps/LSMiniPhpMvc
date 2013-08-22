@@ -39,8 +39,8 @@ class View
 	* view and controller to use for rendering
 	*/
 	public function prepare($controller, $action){
-		$this->controller = $controller;
-		$this->action = $action;
+		$this->controller = strtolower($controller);
+		$this->action = strtolower($action);
 	}
 
 }
