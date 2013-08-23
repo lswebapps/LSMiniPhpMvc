@@ -4,7 +4,7 @@
 //whether we are on local or remote server
 
 //We are on local machine
-if(strpos($_SERVER['SERVER_NAME'], 'localhost') !== false){
+if(strpos($_SERVER['HTTP_HOST'], 'localhost') !== false){
 	define('DB_TYPE', 'mysql');
 	define('DB_HOST', 'localhost');
 	define('DB_NAME', 'LSMiniPhpMvc');
