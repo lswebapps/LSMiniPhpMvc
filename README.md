@@ -1,4 +1,4 @@
 LSMiniPhpMvc
 ============
 
-A simple php framework for small projects
+A simple php framework for small to medium projects
