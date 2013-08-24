@@ -19,19 +19,19 @@ class View
 	* calling controller
 	*/
 	public function render($action = null, $layout = null){
-		require("views/header.php");
+		require(APP_PATH."/views/header.php");
 		if($action === null){
-			$view_file = "views/".$this->controller."/".$this->action.".php";
+			$view_file = APP_PATH."/views/".$this->controller."/".$this->action.".php";
 			if(!file_exists($view_file)){
 				throw new Exception("View file for action $this->action does not exist, please create it");
 			}
 			require($view_file);
 		}
 		else{
-			$view_file = "views/".$this->controller."/".$action.".php";
+			$view_file = APP_PATH."/views/".$this->controller."/".$action.".php";
 			require($view_file);
 		}
-		require("views/footer.php");
+		require(APP_PATH."/views/footer.php");
 	}
 
 	/**

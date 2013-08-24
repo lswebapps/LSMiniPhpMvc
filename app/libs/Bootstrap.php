@@ -17,7 +17,7 @@ class Bootstrap
 			$controller_name = $url[0];
 
 			//require/load controller file
-			$file = 'controllers/'.$controller_name.'.php';
+			$file = APP_PATH.'/controllers/'.$controller_name.'.php';
 			if(file_exists($file)){
 				require($file);
 				$this->require_model_for_controller($controller_name);
@@ -25,7 +25,7 @@ class Bootstrap
 			}
 			else{
 				//throw an error if the file does not exist
-				require("controllers/error.php");
+				require(APP_PATH."/controllers/error.php");
 				$this->require_model_for_controller($controller_name);
 				$error_controller = new  Error();
 				$error_controller->__call("index");
@@ -33,7 +33,7 @@ class Bootstrap
 			}
 		}
 		else{
-			$file = 'controllers/'.$controller_name.'.php';
+			$file = APP_PATH.'/controllers/'.$controller_name.'.php';
 			require($file);
 			$this->require_model_for_controller($controller_name);
 			//if not, then load default controller
@@ -57,7 +57,7 @@ class Bootstrap
 	}
 
 	function require_model_for_controller($controller_name){
-		$model_filename = "models/".$controller_name."_model.php";
+		$model_filename = APP_PATH."/models/".$controller_name."_model.php";
 		if(file_exists($model_filename)){
 			require($model_filename);
 		}
