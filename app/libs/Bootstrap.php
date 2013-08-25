@@ -3,57 +3,152 @@
 class Bootstrap
 {
 	
-	function __construct()
+	function __construct($url)
 	{
-		$url = $_GET['url'];
+		$this->url = $url;		
+	}
+
+	function start_app(){
+		$this->extract_url_segments($this->url);
+	}
+
+	function extract_url_segments($url){
+
+		$url_segments_array = array();
+
+		//trim url with leading and ending slashes
 		$url = rtrim($url, '/');
+
+		//explode the url and get parts
 		$url = explode('/', $url);
 
 		//setting default controller name
 		$controller_name = "index";
+		$action_name = "index";
 
-		//check if a controller has been specified
-		if(isset($url[0]) && !empty($url[0])){
+		if ($this->only_controller_set($url)){
 			$controller_name = $url[0];
+			$url_segments_array[0] = $controller_name;
+			$this->call_controller_with_default_action($controller_name);
+		}
+		elseif ($this->only_controller_and_action_set($url)) {
+			$controller_name = $url[0];
+			$url_segments_array[0] = $controller_name;
+			$action_name = $url[1];
+			$url_segments_array[1] = $action_name;
+			$this->call_controller_with_specified_action(
+				$controller_name, $action_name);
+		}
+		elseif ($this->all_url_segments_set($url)){
+			$controller_name = $url[0];
+			$url_segments_array[0] = $controller_name;
+			$action_name = $url[1];
+			$url_segments_array[1] = $action_name;
+			$parameter = $url[2];
+			$url_segments_array[2] = $parameter;
+			$this->call_controller_with_specified_action_and_parameter(
+				$controller_name, $action_name, $parameter);
+		}
+		else{
+			$url_segments_array[0] = $controller_name;
+			$this->call_default_controller();
+		}
 
-			//require/load controller file
-			$file = APP_PATH.'/controllers/'.$controller_name.'.php';
-			if(file_exists($file)){
-				require($file);
-				$this->require_model_for_controller($controller_name);
+		return $url_segments_array;
+	}
+
+	function only_controller_set($url_segments_array){
+
+		if(isset($url_segments_array[0]) && 
+				!isset($url_segments_array[1]) && 
+				!isset($url_segments_array[2])){
+
+			return true;
+		}
+
+		return false;
+	}
+
+	function only_controller_and_action_set($url_segments_array){
+
+		if(isset($url_segments_array[0]) && 
+				isset($url_segments_array[1]) && 
+				!isset($url_segments_array[2])){
+
+			return true;
+		}
+
+		return false;
+	}
+
+	function all_url_segments_set($url_segments_array){
+
+		if(isset($url_segments_array[0]) && 
+				isset($url_segments_array[1]) && 
+				isset($url_segments_array[2])){
+
+			return true;
+		}
+
+		return false;
+	}
+
+	function call_controller_with_default_action(
+		$controller_name){
+
+		try{
+			$controller_name = ucfirst($controller_name);
+			if(class_exists($controller_name)){
 				$controller = new $controller_name();
-			}
-			else{
-				//throw an error if the file does not exist
-				require(APP_PATH."/controllers/error.php");
-				$this->require_model_for_controller($controller_name);
-				$error_controller = new  Error();
-				$error_controller->__call("index");
-				return false;
+				$controller->__call("index");	
+				return true;
 			}
 		}
-		else{
-			$file = APP_PATH.'/controllers/'.$controller_name.'.php';
-			require($file);
-			$this->require_model_for_controller($controller_name);
-			//if not, then load default controller
-			$controller = new $controller_name();
+		catch(Exception $e){
+			throw new Exception($e);	
+		}
+		return $this->call_error_controller();
+	}
+
+	function call_controller_with_specified_action(
+		$controller_name, $action_name){
+
+		try {
+			$controller_name = ucfirst($controller_name);
+			if(class_exists($controller_name)){
+				$controller = new $controller_name();
+				$controller->__call($action_name);
+				return true;
+			}
+			
+		} catch (Exception $e) {
+			throw new Exception($e);
+		}
+		return $this->call_error_controller();
+	}
+
+	function call_controller_with_specified_action_and_parameter(
+		$controller_name, $action_name, $parameter){
+
+		try {
+			$controller_name = ucfirst($controller_name);
+			if(class_exists($controller_name)){
+				$controller = new $controller_name();
+				$controller->__call($action_name, $parameter);
+				return true;
+			}	
+		} catch (Exception $e) {
+			throw new Exception($e);
 		}
 
-		//call controller with method and argument
-		if(isset($url[2]) && isset($url[1])){
-			$controller->__call($url[1], $url[2]);
-		}
-		else if(isset($url[1])){
+		return $this->call_error_controller();
+	}
 
-			//call controller with method only
-			$controller->__call($url[1]);
-		}
-		else{
-			//call controller with default method
-			//because no method was explicitly given
-			$controller->__call('index');
-		}
+	function call_error_controller(){
+
+		$error_controller = new  Error();
+		$error_controller->__call("index");
+		return false;
 	}
 
 	function require_model_for_controller($controller_name){
