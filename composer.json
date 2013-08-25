@@ -1,0 +1,17 @@
+{
+    "require": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "config" : {
+        "vendor-dir" : "app/packages"
+    },
+    "autoload": {
+		"classmap": [
+			"app/controllers",
+			"app/models",
+			"app/libs",
+            "app/helpers",
+            "app/config"
+		]
+	}
+}
