@@ -1,7 +1,6 @@
 <?php 
 
 require(__DIR__.'/../packages/autoload.php');
-define('APP_PATH', __DIR__.'/../');
 /**
 * 
 */
