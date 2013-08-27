@@ -10,8 +10,11 @@
 			"app/controllers",
 			"app/models",
 			"app/libs",
-            "app/helpers",
-            "app/config"
-		]
+            "app/helpers"
+		],
+        "files": [
+            "app/config/database.php",
+            "app/config/paths.php"
+        ]
 	}
 }
